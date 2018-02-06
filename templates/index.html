@@ -13,15 +13,16 @@
 
 	<body>
 		<div id="container">
-			<form action="">
+			<form action="/user" method="post">
+{#                {% csrf_token %}#}
 				<div class="login">LOGIN</div>
 				<div class="username-text">姓名:</div>
 				<div class="password-text">密码:</div>
 				<div class="username-field">
-					<input type="text" name="username" value="azmind" />
+					<input type="text" name="username" value="name" />
 				</div>
 				<div class="password-field">
-					<input type="password" name="password" value="azmind" />
+					<input type="password" name="password" value="pwssword" />
 				</div>
 				<input type="checkbox" name="remember-me" id="remember-me" /><label for="remember-me">Remember me</label>
 				<div class="forgot-usr-pwd">Forgot <a href="#">username</a> or <a href="#">password</a>?</div>

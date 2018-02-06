@@ -9,19 +9,20 @@ from rest_framework.views import APIView
 from .models import User
 from django.core import serializers
 from django.http import HttpResponse
-
+from .serializers import UserSerializer
+import uuid
 # Create your views here.
-class UserList(APIView):
-    def get(self, request, format=None):
-        try:
-            te = User.objects.all()
-            # serializer = OrderSerializer(te, many=True)
-            # data = serializer.data
-            # print data
-            # return Response(data={'retCode': 0, 'message': 'success', 'result': data})
-            return Response(len(te))
-        except Exception as e:
-            return Response(data={'retCode': 1400, 'message': e.message, 'result': ''})
+# class UserList(APIView):
+    # def get(self, request, format=None):
+    #     try:
+    #         te = User.objects.all()
+    #         # serializer = OrderSerializer(te, many=True)
+    #         # data = serializer.data
+    #         # print data
+    #         # return Response(data={'retCode': 0, 'message': 'success', 'result': data})
+    #         return Response(len(te))
+    #     except Exception as e:
+    #         return Response(data={'retCode': 1400, 'message': e.message, 'result': ''})
 
     # def post(self,request,format=None):
     #     try:
@@ -38,38 +39,45 @@ class UserList(APIView):
     #         return Response(data={'retCode': 1400, 'message': e.message, 'result': ''})
 
 def  index(request):
-    return render_to_response('test.html')
+    return render_to_response('index.html')
 
 
 from .form import UserForm
 
+class Login(APIView):
+    def get(self, request,format=None):
+        if request.method == 'POST':
+            name = request.POST['username']
+            password = request.POST['password']
+            if name and password is not None:
+                user = User.objects.filter(name=name)
+                if user:
+                    serializer = UserSerializer(user, many=True)
+                    data = serializer.data
+                    if data[0]['pwd'] == password:
+                        return render_to_response('test.html')
+                    else:
+                        return render_to_response('index.html')
+                else:
+                    return render_to_response('index.html')
+            else:
+                 return render_to_response('index.html')
+        else:  # 当正常访问时
+            return render_to_response('index.html')
 
-def login(request):
-    if request.method == 'POST':  # 当提交表单时
+    def post(self, request,format=None):
+        if request.method == 'POST':
+            name = request.POST['username']
+            password = request.POST['password']
+            if name and password is not None:
+                id = uuid.uuid4()
+                user = User.objects.create(id=id ,name=name,pwd=password)
+                if user:
+                    return render_to_response('test.html')
+                else:
+                    return render_to_response('index.html')
+            else:
+                 return render_to_response('index.html')
+        else:  # 当正常访问时
+            return render_to_response('index.html')
 
-        form = UserForm(request.POST)  # form 包含提交的数据
-
-        if form.is_valid():  # 如果提交的数据合法
-            a = form.cleaned_data['a']
-            b = form.cleaned_data['b']
-            return HttpResponse(str(int(a) + int(b)))
-
-    else:  # 当正常访问时
-        form = UserForm()
-    return render(request, 'index.html', {'form': form})
-
-def register(request):
-    if request.method == 'POST':
-        uf = UserForm(request.POST)
-        if uf.is_valid():
-            #获得表单数据
-            username = uf.cleaned_data['username']
-            password = uf.cleaned_data['password']
-            #添加到数据库
-            User.objects.create(username= username,password=password)
-            return HttpResponse('Register success!!')
-        else:
-            return HttpResponse('Register failed!!')
-    else:
-        uf = UserForm()
-        return render_to_response('register.html',  context=( {'uf':uf}))
