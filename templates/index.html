@@ -1,0 +1,33 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<html dir="ltr" lang="en-US">
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Welcome</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+
+
+	</head>
+
+	<body>
+		<div id="container">
+			<form action="">
+				<div class="login">LOGIN</div>
+				<div class="username-text">姓名:</div>
+				<div class="password-text">密码:</div>
+				<div class="username-field">
+					<input type="text" name="username" value="azmind" />
+				</div>
+				<div class="password-field">
+					<input type="password" name="password" value="azmind" />
+				</div>
+				<input type="checkbox" name="remember-me" id="remember-me" /><label for="remember-me">Remember me</label>
+				<div class="forgot-usr-pwd">Forgot <a href="#">username</a> or <a href="#">password</a>?</div>
+				<input type="submit" name="submit" value="GO" />
+			</form>
+		</div>
+
+	</body>
+</html>
